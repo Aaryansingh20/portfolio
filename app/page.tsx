@@ -1,5 +1,5 @@
 "use client"
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, useCallback } from "react"
 import {
   Search,
   Volume2,
@@ -17,9 +17,12 @@ import {
   Cloud,
   X,
   Minus,
-  Pin,
+  Maximize2,
 } from "lucide-react"
-import PDFContent from "@/components/ui/pdf-content"
+import Portfolio from "@/components/ui/portfolio"
+import Notepad from "@/components/ui/Notepad"
+import Calculator from "@/components/ui/Calculator"
+import Weather from "@/components/ui/weather"
 
 interface PinnedApp {
   name: string
@@ -35,7 +38,8 @@ interface RecommendedItem {
 interface DesktopApp extends PinnedApp {
   isOpen: boolean
   isMinimized: boolean
-  isPinned: boolean
+  isMaximized: boolean
+  position: { x: number; y: number }
 }
 
 export default function ModernWindows() {
@@ -87,36 +91,73 @@ export default function ModernWindows() {
   ]
 
   const [desktopApps, setDesktopApps] = useState<DesktopApp[]>([
-    { name: "My Computer", icon: "💻", isOpen: false, isMinimized: false, isPinned: false },
-    { name: "Recycle Bin", icon: "🗑️", isOpen: false, isMinimized: false, isPinned: false },
-    { name: "Documents", icon: "📁", isOpen: false, isMinimized: false, isPinned: false },
-    { name: "PDF Reader", icon: "📄", isOpen: false, isMinimized: false, isPinned: false },
+    {
+      name: "PDF Reader",
+      icon: "📄",
+      isOpen: false,
+      isMinimized: false,
+      isMaximized: false,
+      position: { x: 20, y: 260 },
+    },
+    {
+      name: "Notepad",
+      icon: "📝",
+      isOpen: false,
+      isMinimized: false,
+      isMaximized: false,
+      position: { x: 120, y: 20 },
+    },
+    {
+      name: "Calculator",
+      icon: "🧮",
+      isOpen: false,
+      isMinimized: false,
+      isMaximized: false,
+      position: { x: 120, y: 100 },
+    },
+    {
+      name: "Weather",
+      icon: "🌤️",
+      isOpen: false,
+      isMinimized: false,
+      isMaximized: false,
+      position: { x: 120, y: 180 },
+    },
   ])
 
   const [openApps, setOpenApps] = useState<DesktopApp[]>([])
+  const [activeWindow, setActiveWindow] = useState<string | null>(null)
 
   const openApp = (app: DesktopApp) => {
     if (!app.isOpen) {
       setDesktopApps(desktopApps.map((a) => (a.name === app.name ? { ...a, isOpen: true, isMinimized: false } : a)))
       setOpenApps([...openApps, { ...app, isOpen: true, isMinimized: false }])
+      setActiveWindow(app.name)
     } else if (app.isMinimized) {
       setOpenApps(openApps.map((a) => (a.name === app.name ? { ...a, isMinimized: false } : a)))
+      setActiveWindow(app.name)
     } else {
-      setOpenApps(openApps.map((a) => (a.name === app.name ? { ...a, isMinimized: true } : a)))
+      setActiveWindow(app.name)
     }
   }
 
   const closeApp = (app: DesktopApp) => {
-    setDesktopApps(desktopApps.map((a) => (a.name === app.name ? { ...a, isOpen: false, isMinimized: false } : a)))
+    setDesktopApps(
+      desktopApps.map((a) =>
+        a.name === app.name ? { ...a, isOpen: false, isMinimized: false, isMaximized: false } : a,
+      ),
+    )
     setOpenApps(openApps.filter((a) => a.name !== app.name))
+    setActiveWindow(openApps.find((a) => a.name !== app.name)?.name || null)
   }
 
   const minimizeApp = (app: DesktopApp) => {
     setOpenApps(openApps.map((a) => (a.name === app.name ? { ...a, isMinimized: true } : a)))
+    setActiveWindow(openApps.find((a) => a.name !== app.name && !a.isMinimized)?.name || null)
   }
 
-  const togglePinApp = (app: DesktopApp) => {
-    setOpenApps(openApps.map((a) => (a.name === app.name ? { ...a, isPinned: !a.isPinned } : a)))
+  const toggleMaximizeApp = (app: DesktopApp) => {
+    setOpenApps(openApps.map((a) => (a.name === app.name ? { ...a, isMaximized: !a.isMaximized } : a)))
   }
 
   const DesktopIcon = ({ app }: { app: DesktopApp }) => (
@@ -167,6 +208,53 @@ export default function ModernWindows() {
     }
   }, [])
 
+  const [isDragging, setIsDragging] = useState(false)
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 })
+
+  const handleMouseDown = useCallback((e: React.MouseEvent<HTMLDivElement>, app: DesktopApp) => {
+    if (e.target instanceof HTMLElement && (e.target.closest(".window-controls") || e.target.closest("button"))) {
+      return
+    }
+    setActiveWindow(app.name)
+    setIsDragging(true)
+    const rect = e.currentTarget.getBoundingClientRect()
+    setDragOffset({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    })
+  }, [])
+
+  const handleMouseMove = useCallback(
+    (e: MouseEvent) => {
+      if (isDragging && activeWindow) {
+        const newX = e.clientX - dragOffset.x
+        const newY = e.clientY - dragOffset.y
+        setOpenApps((prevApps) =>
+          prevApps.map((app) => (app.name === activeWindow ? { ...app, position: { x: newX, y: newY } } : app)),
+        )
+      }
+    },
+    [isDragging, activeWindow, dragOffset],
+  )
+
+  const handleMouseUp = useCallback(() => {
+    setIsDragging(false)
+  }, [])
+
+  useEffect(() => {
+    if (isDragging) {
+      document.addEventListener("mousemove", handleMouseMove)
+      document.addEventListener("mouseup", handleMouseUp)
+    } else {
+      document.removeEventListener("mousemove", handleMouseMove)
+      document.removeEventListener("mouseup", handleMouseUp)
+    }
+    return () => {
+      document.removeEventListener("mousemove", handleMouseMove)
+      document.removeEventListener("mouseup", handleMouseUp)
+    }
+  }, [isDragging, handleMouseMove, handleMouseUp])
+
   return (
     <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
       {/* Screen content */}
@@ -185,32 +273,56 @@ export default function ModernWindows() {
         {openApps.map((app) => (
           <div
             key={app.name}
-            className={`absolute inset-0 bottom-12 bg-gray-800/90 backdrop-blur-xl text-white shadow-2xl overflow-hidden flex flex-col
-                        transition-all duration-300 ease-in-out
-                        ${app.isMinimized ? "opacity-0 scale-95 pointer-events-none" : "opacity-100 scale-100"}`}
+            className={`absolute bg-gray-800/90 backdrop-blur-xl text-white shadow-2xl overflow-hidden flex flex-col
+                        transition-all duration-100 ease-out rounded-lg
+                        ${app.isMinimized ? "opacity-0 scale-95 pointer-events-none" : "opacity-100 scale-100"}
+                        ${activeWindow === app.name ? "z-10" : "z-0"}
+                        ${
+                          app.isMaximized
+                            ? "left-0 right-0 top-0 bottom-12 rounded-none"
+                            : "w-[80%] h-[80%] max-w-4xl max-h-[600px]"
+                        }`}
+            style={
+              !app.isMaximized
+                ? {
+                    left: `${app.position.x}px`,
+                    top: `${app.position.y}px`,
+                  }
+                : undefined
+            }
+            onMouseDown={(e) => handleMouseDown(e, app)}
           >
-            <div className="flex justify-between items-center p-2 bg-gray-700/50 rounded-t-lg">
-              <div className="flex items-center gap-2">
-                <span className="text-xl">{app.icon}</span>
+            <div className="flex justify-between items-center p-2 bg-gray-700/50">
+              <div className="flex items-center gap-2 ml-1">
                 <span className="text-sm font-semibold">{app.name}</span>
               </div>
-              <div className="flex items-center gap-2">
-                <button onClick={() => minimizeApp(app)} className="text-white/60 hover:text-white">
-                  <Minus className="w-4 h-4" />
+              <div className="flex items-center gap-1 window-controls">
+                <button onClick={() => minimizeApp(app)} className="p-1 hover:bg-gray-600/80 transition-colors rounded">
+                  <Minus className="w-4 h-4 text-gray-300" />
                 </button>
                 <button
-                  onClick={() => togglePinApp(app)}
-                  className={`text-white/60 hover:text-white ${app.isPinned ? "text-blue-400" : ""}`}
+                  onClick={() => toggleMaximizeApp(app)}
+                  className="p-1 hover:bg-gray-600/80 transition-colors rounded"
                 >
-                  <Pin className="w-4 h-4" />
+                  <Maximize2 className="w-4 h-4 text-gray-300" />
                 </button>
-                <button onClick={() => closeApp(app)} className="text-white/60 hover:text-white">
-                  <X className="w-4 h-4" />
+                <button onClick={() => closeApp(app)} className="p-1 hover:bg-red-500 transition-colors rounded">
+                  <X className="w-4 h-4 text-gray-300" />
                 </button>
               </div>
             </div>
             <div className="flex-1 p-4 overflow-auto">
-              {app.name === "PDF Reader" ? <PDFContent /> : <p className="text-sm">Content for {app.name}</p>}
+              {app.name === "PDF Reader" ? (
+                <Portfolio />
+              ) : app.name === "Notepad" ? (
+                <Notepad />
+              ) : app.name === "Calculator" ? (
+                <Calculator />
+              ) : app.name === "Weather" ? (
+                <Weather />
+              ) : (
+                <p className="text-sm">Content for {app.name}</p>
+              )}
             </div>
           </div>
         ))}
@@ -369,47 +481,60 @@ export default function ModernWindows() {
             <Volume2 className="w-4 h-4" />
             <Wifi className="w-4 h-4" />
             <Battery className="w-4 h-4" />
-            <div className="text-sm mr-2 cursor-pointer" onClick={() => setIsTimePopupOpen(!isTimePopupOpen)}>
+            <div
+              className="text-sm mr-2 cursor-pointer hover:bg-white/10 px-2 py-1 rounded transition-colors duration-200"
+              onClick={() => setIsTimePopupOpen(!isTimePopupOpen)}
+            >
               {currentTime.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
             </div>
             {isTimePopupOpen && (
               <div
                 ref={timePopupRef}
-                className="absolute bottom-full right-0 mb-2 w-96 bg-gray-900/90 backdrop-blur-xl rounded-md shadow-lg overflow-hidden text-sm border border-white/20 p-4"
+                className="absolute bottom-full right-0 mb-2 w-96 bg-gray-800/95 backdrop-blur-xl rounded-lg shadow-lg overflow-hidden text-sm border border-white/20 p-6"
               >
-                <div className="text-lg font-semibold mb-2">
-                  {currentTime.toLocaleString([], { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
+                <div className="text-2xl font-bold mb-4">
+                  {currentTime.toLocaleString([], { weekday: "long", month: "long", day: "numeric" })}
                 </div>
-                <div className="text-3xl font-bold mb-4">
+                <div className="text-4xl font-bold mb-6 text-blue-400">
                   {currentTime.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                 </div>
                 <div className="grid grid-cols-7 gap-1 text-center">
                   {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map((day) => (
-                    <div key={day} className="text-white/60 font-semibold text-xs mb-1">
+                    <div key={day} className="text-white/60 font-semibold text-xs mb-2">
                       {day}
                     </div>
                   ))}
-                  {Array.from(
-                    { length: new Date(currentTime.getFullYear(), currentTime.getMonth() + 1, 0).getDate() },
-                    (_, i) => i + 1,
-                  ).map((date) => {
-                    const isToday = date === currentTime.getDate()
-                    const isPastDate = date < currentTime.getDate()
-                    return (
-                      <div
-                        key={date}
-                        className={`p-1 rounded-full w-8 h-8 flex items-center justify-center text-sm cursor-pointer ${
-                          isToday
-                            ? "bg-blue-500 text-white font-bold"
-                            : isPastDate
-                              ? "text-white/40 hover:bg-white/5"
-                              : "hover:bg-white/10"
-                        }`}
-                      >
-                        {date}
-                      </div>
-                    )
-                  })}
+                  {(() => {
+                    const today = new Date(currentTime)
+                    const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1)
+                    const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0)
+                    const daysInMonth = lastDayOfMonth.getDate()
+                    const startingDay = firstDayOfMonth.getDay()
+
+                    return Array.from({ length: 42 }, (_, i) => {
+                      const day = i - startingDay + 1
+                      const isCurrentMonth = day > 0 && day <= daysInMonth
+                      const isToday = isCurrentMonth && day === today.getDate()
+                      const isPastDate = isCurrentMonth && day < today.getDate()
+
+                      return (
+                        <div
+                          key={i}
+                          className={`p-1 rounded-lg w-8 h-8 flex items-center justify-center text-sm ${
+                            isCurrentMonth
+                              ? isToday
+                                ? "bg-blue-500 text-white font-bold"
+                                : isPastDate
+                                  ? "text-white/40 hover:bg-white/5 cursor-pointer"
+                                  : "hover:bg-white/10 cursor-pointer"
+                              : "text-white/20"
+                          }`}
+                        >
+                          {isCurrentMonth ? day : ""}
+                        </div>
+                      )
+                    })
+                  })()}
                 </div>
               </div>
             )}
