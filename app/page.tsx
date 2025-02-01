@@ -55,6 +55,12 @@ export default function ModernWindows() {
   const powerMenuRef = useRef<HTMLDivElement>(null)
   const extraIconsMenuRef = useRef<HTMLDivElement>(null)
   const timePopupRef = useRef<HTMLDivElement>(null)
+  const [isLocked, setIsLocked] = useState(false)
+  const [lockTimer, setLockTimer] = useState(0)
+  const [enteredPassword, setEnteredPassword] = useState("")
+  const [isShutDown, setIsShutDown] = useState(false)
+  const [isRestarting, setIsRestarting] = useState(false)
+  const [isSleeping, setIsSleeping] = useState(false)
 
   const pinnedApps: PinnedApp[] = [
     { name: "Edge", icon: "🌐" },
@@ -255,6 +261,30 @@ export default function ModernWindows() {
     }
   }, [isDragging, handleMouseMove, handleMouseUp])
 
+  useEffect(() => {
+    let interval: NodeJS.Timeout
+    if (isLocked) {
+      interval = setInterval(() => {
+        setLockTimer((prevTimer) => prevTimer + 1)
+      }, 1000)
+    }
+    return () => {
+      if (interval) clearInterval(interval)
+    }
+  }, [isLocked])
+
+  useEffect(() => {
+    if (isSleeping) {
+      const handleMouseMove = () => {
+        setIsSleeping(false)
+      }
+      document.addEventListener("mousemove", handleMouseMove)
+      return () => {
+        document.removeEventListener("mousemove", handleMouseMove)
+      }
+    }
+  }, [isSleeping])
+
   return (
     <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
       {/* Screen content */}
@@ -280,7 +310,9 @@ export default function ModernWindows() {
                         ${
                           app.isMaximized
                             ? "left-0 right-0 top-0 bottom-12 rounded-none"
-                            : "w-[80%] h-[80%] max-w-4xl max-h-[600px]"
+                            : app.name === "Calculator"
+                              ? "w-[300px] h-[400px]"
+                              : "w-[80%] h-[80%] max-w-4xl max-h-[600px]"
                         }`}
             style={
               !app.isMaximized
@@ -311,7 +343,7 @@ export default function ModernWindows() {
                 </button>
               </div>
             </div>
-            <div className="flex-1 p-4 overflow-auto">
+            <div className="flex-1 w-full h-full overflow-auto scrollbar-hide">
               {app.name === "PDF Reader" ? (
                 <Portfolio />
               ) : app.name === "Notepad" ? (
@@ -406,16 +438,43 @@ export default function ModernWindows() {
                     ref={powerMenuRef}
                     className="absolute bottom-full right-0 mb-2 w-56 bg-gray-900/90 backdrop-blur-xl rounded-md shadow-lg overflow-hidden text-sm border border-white/20"
                   >
-                    <button className="w-full px-4 py-3 text-left hover:bg-white/10 flex items-center gap-3">
+                    <button
+                      className="w-full px-4 py-3 text-left hover:bg-white/10 flex items-center gap-3"
+                      onClick={() => {
+                        setIsPowerMenuOpen(false)
+                        setIsSleeping(true)
+                      }}
+                    >
                       <Moon className="w-4 h-4" /> <span>Sleep</span>
                     </button>
-                    <button className="w-full px-4 py-3 text-left hover:bg-white/10 flex items-center gap-3">
+                    <button
+                      className="w-full px-4 py-3 text-left hover:bg-white/10 flex items-center gap-3"
+                      onClick={() => {
+                        setIsPowerMenuOpen(false)
+                        setIsRestarting(true)
+                        setTimeout(() => {
+                          setIsRestarting(false)
+                        }, 5000)
+                      }}
+                    >
                       <RotateCcw className="w-4 h-4" /> <span>Restart</span>
                     </button>
-                    <button className="w-full px-4 py-3 text-left hover:bg-white/10 flex items-center gap-3">
+                    <button
+                      className="w-full px-4 py-3 text-left hover:bg-white/10 flex items-center gap-3"
+                      onClick={() => {
+                        setIsPowerMenuOpen(false)
+                        setIsShutDown(true)
+                      }}
+                    >
                       <Power className="w-4 h-4" /> <span>Shut down</span>
                     </button>
-                    <button className="w-full px-4 py-3 text-left hover:bg-white/10 flex items-center gap-3">
+                    <button
+                      className="w-full px-4 py-3 text-left hover:bg-white/10 flex items-center gap-3"
+                      onClick={() => {
+                        setIsPowerMenuOpen(false)
+                        setIsLocked(true)
+                      }}
+                    >
                       <Lock className="w-4 h-4" /> <span>Lock</span>
                     </button>
                   </div>
@@ -564,6 +623,51 @@ export default function ModernWindows() {
             </div>
           </div>
         </div>
+        {isLocked && (
+          <div className="absolute inset-0 bg-black/90 flex items-center justify-center z-50">
+            <div className="text-white text-center">
+              <div className="text-6xl mb-4">
+                {currentTime.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+              </div>
+              <input
+                type="password"
+                className="bg-white/10 text-white placeholder-white/60 rounded-full py-2 px-4 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Enter password"
+                value={enteredPassword}
+                onChange={(e) => setEnteredPassword(e.target.value)}
+                onKeyPress={(e) => {
+                  if (e.key === "Enter") {
+                    if (enteredPassword === "123") {
+                      setIsLocked(false)
+                      setEnteredPassword("")
+                    } else {
+                      alert("Incorrect password")
+                    }
+                  }
+                }}
+              />
+            </div>
+          </div>
+        )}
+        {isRestarting && (
+          <div className="absolute inset-0 bg-black flex items-center justify-center z-50">
+            <div className="text-white text-center">
+              <RotateCcw className="w-16 h-16 animate-spin mb-4" />
+              <p className="text-2xl">Restarting...</p>
+            </div>
+          </div>
+        )}
+        {isShutDown && (
+          <div className="absolute inset-0 bg-black flex items-center justify-center z-50">
+            <button
+              className="bg-white/10 text-white rounded-full p-4 hover:bg-white/20 transition-colors"
+              onClick={() => setIsShutDown(false)}
+            >
+              <Power className="w-12 h-12" />
+            </button>
+          </div>
+        )}
+        {isSleeping && <div className="absolute inset-0 bg-black z-50" />}
       </div>
     </div>
   )
