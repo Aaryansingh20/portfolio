@@ -1,5 +1,5 @@
 "use client"
-import { useState, useEffect, useRef, useCallback } from "react"
+import { useState, useEffect, useCallback, useMemo } from "react"
 import {
   Search,
   Volume2,
@@ -23,6 +23,7 @@ import Portfolio from "@/components/ui/portfolio"
 import Notepad from "@/components/ui/Notepad"
 import Calculator from "@/components/ui/Calculator"
 import Weather from "@/components/ui/weather"
+import { useRef } from "react"
 
 interface PinnedApp {
   name: string
@@ -61,40 +62,47 @@ export default function ModernWindows() {
   const [isShutDown, setIsShutDown] = useState(false)
   const [isRestarting, setIsRestarting] = useState(false)
   const [isSleeping, setIsSleeping] = useState(false)
+  const computerWindowRef = useRef<HTMLDivElement>(null)
 
-  const pinnedApps: PinnedApp[] = [
-    { name: "Edge", icon: "🌐" },
-    { name: "Word", icon: "W" },
-    { name: "Excel", icon: "X" },
-    { name: "PowerPoint", icon: "P" },
-    { name: "Outlook", icon: "✉️" },
-    { name: "Calendar", icon: "📅" },
-    { name: "Store", icon: "🏪" },
-    { name: "Photos", icon: "🖼️" },
-    { name: "Settings", icon: "⚙️" },
-    { name: "Calculator", icon: "🧮" },
-    { name: "Notepad", icon: "📝" },
-    { name: "Paint", icon: "🎨" },
-    { name: "Teams", icon: "👥" },
-    { name: "OneDrive", icon: "☁️" },
-    { name: "Spotify", icon: "🎵" },
-    { name: "VS Code", icon: "💻" },
-    { name: "Terminal", icon: "🖥️" },
-    { name: "Skype", icon: "💬" },
-    { name: "Weather", icon: "🌤️" },
-    { name: "Maps", icon: "🗺️" },
-  ]
+  const pinnedApps = useMemo(
+    () => [
+      { name: "Edge", icon: "🌐" },
+      { name: "Word", icon: "W" },
+      { name: "Excel", icon: "X" },
+      { name: "PowerPoint", icon: "P" },
+      { name: "Outlook", icon: "✉️" },
+      { name: "Calendar", icon: "📅" },
+      { name: "Store", icon: "🏪" },
+      { name: "Photos", icon: "🖼️" },
+      { name: "Settings", icon: "⚙️" },
+      { name: "Calculator", icon: "🧮" },
+      { name: "Notepad", icon: "📝" },
+      { name: "Paint", icon: "🎨" },
+      { name: "Teams", icon: "👥" },
+      { name: "OneDrive", icon: "☁️" },
+      { name: "Spotify", icon: "🎵" },
+      { name: "VS Code", icon: "💻" },
+      { name: "Terminal", icon: "🖥️" },
+      { name: "Skype", icon: "💬" },
+      { name: "Weather", icon: "🌤️" },
+      { name: "Maps", icon: "🗺️" },
+    ],
+    [],
+  )
 
-  const recommendedItems: RecommendedItem[] = [
-    { name: "Document.txt", type: "Recently added", icon: "📄" },
-    { name: "Project.pdf", type: "Yesterday at 2:30 PM", icon: "📑" },
-    { name: "Meeting Notes.docx", type: "Yesterday at 11:24 AM", icon: "📝" },
-    { name: "Budget.xlsx", type: "Tuesday at 3:45 PM", icon: "📊" },
-    { name: "Presentation.pptx", type: "Monday at 9:15 AM", icon: "🎭" },
-    { name: "Report.pdf", type: "Last week", icon: "📊" },
-    { name: "Image001.jpg", type: "Last month", icon: "🖼️" },
-    { name: "Resume.docx", type: "Last month", icon: "📄" },
-  ]
+  const recommendedItems = useMemo(
+    () => [
+      { name: "Document.txt", type: "Recently added", icon: "📄" },
+      { name: "Project.pdf", type: "Yesterday at 2:30 PM", icon: "📑" },
+      { name: "Meeting Notes.docx", type: "Yesterday at 11:24 AM", icon: "📝" },
+      { name: "Budget.xlsx", type: "Tuesday at 3:45 PM", icon: "📊" },
+      { name: "Presentation.pptx", type: "Monday at 9:15 AM", icon: "🎭" },
+      { name: "Report.pdf", type: "Last week", icon: "📊" },
+      { name: "Image001.jpg", type: "Last month", icon: "🖼️" },
+      { name: "Resume.docx", type: "Last month", icon: "📄" },
+    ],
+    [],
+  )
 
   const [desktopApps, setDesktopApps] = useState<DesktopApp[]>([
     {
@@ -136,11 +144,24 @@ export default function ModernWindows() {
 
   const openApp = (app: DesktopApp) => {
     if (!app.isOpen) {
-      setDesktopApps(desktopApps.map((a) => (a.name === app.name ? { ...a, isOpen: true, isMinimized: false } : a)))
-      setOpenApps([...openApps, { ...app, isOpen: true, isMinimized: false }])
+      const computerRect = computerWindowRef.current?.getBoundingClientRect()
+      const screenWidth = computerRect?.width || window.innerWidth
+      const screenHeight = computerRect?.height || window.innerHeight
+      const appWidth = app.name === "Calculator" ? 300 : Math.min(screenWidth * 0.8, 800)
+      const appHeight = app.name === "Calculator" ? 400 : Math.min(screenHeight * 0.8, 600)
+      const centerX = (screenWidth - appWidth) / 2
+      const centerY = (screenHeight - appHeight) / 2
+      const newApp = {
+        ...app,
+        isOpen: true,
+        isMinimized: false,
+        position: { x: centerX, y: centerY },
+      }
+      setOpenApps((prevApps) => [...prevApps, newApp])
+      setDesktopApps((prevApps) => prevApps.map((a) => (a.name === app.name ? newApp : a)))
       setActiveWindow(app.name)
     } else if (app.isMinimized) {
-      setOpenApps(openApps.map((a) => (a.name === app.name ? { ...a, isMinimized: false } : a)))
+      setOpenApps((prevApps) => prevApps.map((a) => (a.name === app.name ? { ...a, isMinimized: false } : a)))
       setActiveWindow(app.name)
     } else {
       setActiveWindow(app.name)
@@ -182,7 +203,7 @@ export default function ModernWindows() {
     )
     setFilteredApps(filteredApps)
     setFilteredItems(filteredItems)
-  }, [searchTerm])
+  }, [searchTerm, pinnedApps, recommendedItems])
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -285,10 +306,56 @@ export default function ModernWindows() {
     }
   }, [isSleeping])
 
+  useEffect(() => {
+    const handleResize = () => {
+      const computerRect = computerWindowRef.current?.getBoundingClientRect()
+      setOpenApps((prevApps) =>
+        prevApps.map((app) => {
+          if (app.isMaximized) return app
+          const screenWidth = computerRect?.width || window.innerWidth
+          const screenHeight = computerRect?.height || window.innerHeight
+          const appWidth = app.name === "Calculator" ? 300 : Math.min(screenWidth * 0.8, 800)
+          const appHeight = app.name === "Calculator" ? 400 : Math.min(screenHeight * 0.8, 600)
+          const centerX = (screenWidth - appWidth) / 2
+          const centerY = (screenHeight - appHeight) / 2
+          return { ...app, position: { x: centerX, y: centerY } }
+        }),
+      )
+    }
+
+    window.addEventListener("resize", handleResize)
+    return () => window.removeEventListener("resize", handleResize)
+  }, [])
+
+  useEffect(() => {
+    const positionApps = () => {
+      const computerRect = computerWindowRef.current?.getBoundingClientRect()
+      setOpenApps((prevApps) =>
+        prevApps.map((app) => {
+          if (app.isMaximized) return app
+          const screenWidth = computerRect?.width || window.innerWidth
+          const screenHeight = computerRect?.height || window.innerHeight
+          const appWidth = app.name === "Calculator" ? 300 : Math.min(screenWidth * 0.8, 800)
+          const appHeight = app.name === "Calculator" ? 400 : Math.min(screenHeight * 0.8, 600)
+          const centerX = (screenWidth - appWidth) / 2
+          const centerY = (screenHeight - appHeight) / 2
+          return { ...app, position: { x: centerX, y: centerY } }
+        }),
+      )
+    }
+
+    positionApps()
+    window.addEventListener("resize", positionApps)
+    return () => window.removeEventListener("resize", positionApps)
+  }, [])
+
   return (
     <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
       {/* Screen content */}
-      <div className="w-[95vw] max-w-6xl aspect-[16/10] bg-gradient-to-br from-[#0c1c3d] via-[#1e3b8a] to-[#5b2a8a] rounded-lg relative overflow-hidden shadow-2xl">
+      <div
+        ref={computerWindowRef}
+        className="w-[95vw] max-w-6xl aspect-[16/10] bg-gradient-to-br from-[#0c1c3d] via-[#1e3b8a] to-[#5b2a8a] rounded-lg relative overflow-hidden shadow-2xl"
+      >
         {/* Centered arc light effect */}
         <div className="absolute left-0 right-0 bottom-0 h-[80%] bg-gradient-to-t from-blue-500/20 to-transparent rounded-[100%] blur-3xl"></div>
 

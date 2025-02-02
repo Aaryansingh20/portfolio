@@ -4,7 +4,7 @@ import type { ReactNode } from "react"
 import "./globals.css"
 
 export const metadata: Metadata = {
-  title: "Henry Heffernan's Portfolio",
+  title: "Portpoilo",
   description: "Showcase of Henry Heffernan's work and experience",
 }
 
