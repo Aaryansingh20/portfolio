@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { ExternalLink, Github, Mail, Twitter } from "lucide-react"
@@ -10,6 +10,40 @@ type Tab = "HOME" | "ABOUT" | "EXPERIENCE" | "PROJECTS" | "CONTACT"
 
 export default function Portfolio() {
   const [activeTab, setActiveTab] = useState<Tab>("HOME")
+  const [audio, setAudio] = useState<HTMLAudioElement | null>(null)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    const audioElement = new Audio("https://assets.mixkit.co/active_storage/sfx/2568/2568.wav")
+    audioElement.preload = "auto"
+
+    audioElement.addEventListener("canplaythrough", () => {
+      setAudio(audioElement)
+      setError(null)
+    })
+
+    audioElement.addEventListener("error", () => {
+      setError("Failed to load audio")
+    })
+
+    return () => {
+      audioElement.removeEventListener("canplaythrough", () => {})
+      audioElement.removeEventListener("error", () => {})
+    }
+  }, [])
+
+  const handleClick = () => {
+    if (audio) {
+      audio.currentTime = 0 // Reset to start
+      audio.play().catch((err) => {
+        console.error("Playback failed", err)
+        setError("Failed to play audio")
+      })
+    } else {
+      setError("Audio not loaded yet")
+    }
+  }
+
 
   const renderContent = () => {
     switch (activeTab) {
@@ -384,15 +418,19 @@ export default function Portfolio() {
           <ul className="space-y-4 flex-grow">
             {(["HOME", "ABOUT", "EXPERIENCE", "PROJECTS", "CONTACT"] as Tab[]).map((item) => (
               <li key={item}>
-                <button
-                  onClick={() => setActiveTab(item)}
-                  className={`font-mono text-blue-600 dark:text-blue-400 hover:underline ${
-                    activeTab === item ? "underline font-bold" : ""
-                  }`}
-                >
-                  {activeTab === item ? "• " : ""}
-                  {item}
-                </button>
+               <button
+  onClick={() => {
+    setActiveTab(item);
+    handleClick();
+  }}
+  className={`font-mono text-blue-600 dark:text-blue-400 hover:underline ${
+    activeTab === item ? "underline font-bold" : ""
+  }`}
+>
+  {activeTab === item ? "• " : ""}
+  {item}
+</button>
+
               </li>
             ))}
           </ul>

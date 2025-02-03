@@ -18,12 +18,18 @@ import {
   X,
   Minus,
   Maximize2,
+  Sun,
+  Settings,
+  Plane,
+  Bluetooth,
 } from "lucide-react"
 import Portfolio from "@/components/ui/portfolio"
 import Notepad from "@/components/ui/Notepad"
 import Calculator from "@/components/ui/Calculator"
 import Weather from "@/components/ui/weather"
 import { useRef } from "react"
+import { Slider } from "@/components/ui/slider"
+import SpaceGame from "@/components/ui/memory-game"
 
 interface PinnedApp {
   name: string
@@ -63,6 +69,14 @@ export default function ModernWindows() {
   const [isRestarting, setIsRestarting] = useState(false)
   const [isSleeping, setIsSleeping] = useState(false)
   const computerWindowRef = useRef<HTMLDivElement>(null)
+  const [batteryPercentage, setBatteryPercentage] = useState(75)
+  const [isQuickSettingsOpen, setIsQuickSettingsOpen] = useState(false)
+  const quickSettingsRef = useRef<HTMLDivElement>(null)
+  const [brightness, setBrightness] = useState(50)
+  const [volume, setVolume] = useState(75)
+  const [activeQuickSetting, setActiveQuickSetting] = useState<string>("wifi")
+  const [quickSettingsAnchor, setQuickSettingsAnchor] = useState<{ x: number; y: number } | null>(null)
+  const [enabledSettings, setEnabledSettings] = useState<string[]>(["wifi"])
 
   const pinnedApps = useMemo(
     () => [
@@ -116,6 +130,14 @@ export default function ModernWindows() {
     {
       name: "Notepad",
       icon: "📝",
+      isOpen: false,
+      isMinimized: false,
+      isMaximized: false,
+      position: { x: 120, y: 20 },
+    },
+    {
+      name: "Memorytest",
+      icon: "🧠",
       isOpen: false,
       isMinimized: false,
       isMaximized: false,
@@ -226,6 +248,9 @@ export default function ModernWindows() {
       }
       if (timePopupRef.current && !timePopupRef.current.contains(event.target as Node)) {
         setIsTimePopupOpen(false)
+      }
+      if (quickSettingsRef.current && !quickSettingsRef.current.contains(event.target as Node)) {
+        closeQuickSettings()
       }
     }
 
@@ -349,8 +374,37 @@ export default function ModernWindows() {
     return () => window.removeEventListener("resize", positionApps)
   }, [])
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setBatteryPercentage((prev) => Math.max(0, Math.min(100, prev + Math.floor(Math.random() * 11) - 5)))
+    }, 60000) // Update every minute
+    return () => clearInterval(interval)
+  }, [])
+
+  const handleQuickSettingClick = (setting: string, event: React.MouseEvent) => {
+    setActiveQuickSetting(setting)
+    setIsQuickSettingsOpen(true)
+    setEnabledSettings((prev) => (prev.includes(setting) ? prev.filter((s) => s !== setting) : [...prev, setting]))
+
+    // Get the bounding rectangle of the taskbar
+    const taskbarRect = event.currentTarget.closest(".absolute.bottom-0")?.getBoundingClientRect()
+
+    if (taskbarRect) {
+      // Position the panel relative to the taskbar
+      setQuickSettingsAnchor({
+        x: taskbarRect.right - 300, // 300px is the approximate width of the quick settings panel
+        y: taskbarRect.top,
+      })
+    }
+  }
+
+  const closeQuickSettings = () => {
+    setIsQuickSettingsOpen(false)
+    setQuickSettingsAnchor(null)
+  }
+
   return (
-    <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
+    <div className="h-screen bg-gray-900 flex items-center justify-center p-4">
       {/* Screen content */}
       <div
         ref={computerWindowRef}
@@ -415,6 +469,8 @@ export default function ModernWindows() {
                 <Portfolio />
               ) : app.name === "Notepad" ? (
                 <Notepad />
+              ) : app.name === "Memorytest" ? (
+                <SpaceGame />
               ) : app.name === "Calculator" ? (
                 <Calculator />
               ) : app.name === "Weather" ? (
@@ -512,7 +568,10 @@ export default function ModernWindows() {
                         setIsSleeping(true)
                       }}
                     >
-                      <Moon className="w-4 h-4" /> <span>Sleep</span>
+                      <div className="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center">
+                        <Moon className="w-5 h-5" />
+                      </div>
+                      <span>Sleep</span>
                     </button>
                     <button
                       className="w-full px-4 py-3 text-left hover:bg-white/10 flex items-center gap-3"
@@ -524,7 +583,10 @@ export default function ModernWindows() {
                         }, 5000)
                       }}
                     >
-                      <RotateCcw className="w-4 h-4" /> <span>Restart</span>
+                      <div className="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center">
+                        <RotateCcw className="w-5 h-5" />
+                      </div>
+                      <span>Restart</span>
                     </button>
                     <button
                       className="w-full px-4 py-3 text-left hover:bg-white/10 flex items-center gap-3"
@@ -533,7 +595,10 @@ export default function ModernWindows() {
                         setIsShutDown(true)
                       }}
                     >
-                      <Power className="w-4 h-4" /> <span>Shut down</span>
+                      <div className="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center">
+                        <Power className="w-5 h-5" />
+                      </div>
+                      <span>Shut down</span>
                     </button>
                     <button
                       className="w-full px-4 py-3 text-left hover:bg-white/10 flex items-center gap-3"
@@ -542,7 +607,10 @@ export default function ModernWindows() {
                         setIsLocked(true)
                       }}
                     >
-                      <Lock className="w-4 h-4" /> <span>Lock</span>
+                      <div className="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center">
+                        <Lock className="w-5 h-5" />
+                      </div>
+                      <span>Lock</span>
                     </button>
                   </div>
                 )}
@@ -604,66 +672,29 @@ export default function ModernWindows() {
 
           {/* Right section */}
           <div className="flex items-center gap-4 text-white/80">
-            <Volume2 className="w-4 h-4" />
-            <Wifi className="w-4 h-4" />
-            <Battery className="w-4 h-4" />
+            <button onClick={(e) => handleQuickSettingClick("wifi", e)} className="p-1 hover:bg-white/10 rounded-md">
+              <Wifi className={`w-4 h-4 ${enabledSettings.includes("wifi") ? "text-purple-500" : "text-white/60"}`} />
+            </button>
+            <button onClick={(e) => handleQuickSettingClick("volume", e)} className="p-1 hover:bg-white/10 rounded-md">
+              <Volume2 className="w-4 h-4" />
+            </button>
+            <div className="relative group">
+              <button
+                onClick={(e) => handleQuickSettingClick("battery", e)}
+                className="p-1 hover:bg-white/10 rounded-md"
+              >
+                <Battery className="w-4 h-4" />
+              </button>
+              <div className="absolute bottom-full right-0 mb-2 px-2 py-1 bg-gray-800 text-white text-xs rounded hidden group-hover:block">
+                {batteryPercentage}%
+              </div>
+            </div>
             <div
               className="text-sm mr-2 cursor-pointer hover:bg-white/10 px-2 py-1 rounded transition-colors duration-200"
               onClick={() => setIsTimePopupOpen(!isTimePopupOpen)}
             >
               {currentTime.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
             </div>
-            {isTimePopupOpen && (
-              <div
-                ref={timePopupRef}
-                className="absolute bottom-full right-0 mb-2 w-96 bg-gray-800/95 backdrop-blur-xl rounded-lg shadow-lg overflow-hidden text-sm border border-white/20 p-6"
-              >
-                <div className="text-2xl font-bold mb-4">
-                  {currentTime.toLocaleString([], { weekday: "long", month: "long", day: "numeric" })}
-                </div>
-                <div className="text-4xl font-bold mb-6 text-blue-400">
-                  {currentTime.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
-                </div>
-                <div className="grid grid-cols-7 gap-1 text-center">
-                  {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map((day) => (
-                    <div key={day} className="text-white/60 font-semibold text-xs mb-2">
-                      {day}
-                    </div>
-                  ))}
-                  {(() => {
-                    const today = new Date(currentTime)
-                    const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1)
-                    const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0)
-                    const daysInMonth = lastDayOfMonth.getDate()
-                    const startingDay = firstDayOfMonth.getDay()
-
-                    return Array.from({ length: 42 }, (_, i) => {
-                      const day = i - startingDay + 1
-                      const isCurrentMonth = day > 0 && day <= daysInMonth
-                      const isToday = isCurrentMonth && day === today.getDate()
-                      const isPastDate = isCurrentMonth && day < today.getDate()
-
-                      return (
-                        <div
-                          key={i}
-                          className={`p-1 rounded-lg w-8 h-8 flex items-center justify-center text-sm ${
-                            isCurrentMonth
-                              ? isToday
-                                ? "bg-blue-500 text-white font-bold"
-                                : isPastDate
-                                  ? "text-white/40 hover:bg-white/5 cursor-pointer"
-                                  : "hover:bg-white/10 cursor-pointer"
-                              : "text-white/20"
-                          }`}
-                        >
-                          {isCurrentMonth ? day : ""}
-                        </div>
-                      )
-                    })
-                  })()}
-                </div>
-              </div>
-            )}
             <div className="relative">
               <ChevronUp className="w-4 h-4 cursor-pointer" onClick={() => setIsExtraIconsOpen(!isExtraIconsOpen)} />
               {isExtraIconsOpen && (
@@ -704,7 +735,7 @@ export default function ModernWindows() {
                 onChange={(e) => setEnteredPassword(e.target.value)}
                 onKeyPress={(e) => {
                   if (e.key === "Enter") {
-                    if (enteredPassword === "123") {
+                    if (enteredPassword === "aryan") {
                       setIsLocked(false)
                       setEnteredPassword("")
                     } else {
@@ -718,6 +749,7 @@ export default function ModernWindows() {
         )}
         {isRestarting && (
           <div className="absolute inset-0 bg-black flex items-center justify-center z-50">
+            {" "}
             <div className="text-white text-center">
               <RotateCcw className="w-16 h-16 animate-spin mb-4" />
               <p className="text-2xl">Restarting...</p>
@@ -727,7 +759,7 @@ export default function ModernWindows() {
         {isShutDown && (
           <div className="absolute inset-0 bg-black flex items-center justify-center z-50">
             <button
-              className="bg-white/10 text-white rounded-full p-4 hover:bg-white/20 transition-colors"
+              className="bgwhite/10 text-white rounded-full p-4 hover:bg-white/20 transition-colors"
               onClick={() => setIsShutDown(false)}
             >
               <Power className="w-12 h-12" />
@@ -736,6 +768,99 @@ export default function ModernWindows() {
         )}
         {isSleeping && <div className="absolute inset-0 bg-black z-50" />}
       </div>
+      {isQuickSettingsOpen && quickSettingsAnchor && (
+        <div
+          ref={quickSettingsRef}
+          className="fixed bg-gray-900/95 backdrop-blur-xl rounded-xl shadow-2xl border border-white/10 overflow-hidden z-50"
+          style={{
+            right: "223px", // Adjust this value as needed to fine-tune the horizontal position
+            bottom: "60px", // Adjust this value to set the distance from the bottom of the screen
+          }}
+        >
+          <div className="p-4 w-80">
+            <div className="grid grid-cols-3 gap-2 mb-4">
+              {["wifi", "bluetooth", "airplane", "energy", "night", "accessibility"].map((setting) => (
+                <button
+                  key={setting}
+                  className={`flex flex-col items-center justify-center p-3 rounded-lg transition-colors ${
+                    enabledSettings.includes(setting) ? "bg-purple-500/20" : "bg-gray-800 hover:bg-gray-700"
+                  }`}
+                  onClick={() =>
+                    setEnabledSettings((prev) =>
+                      prev.includes(setting) ? prev.filter((s) => s !== setting) : [...prev, setting],
+                    )
+                  }
+                >
+                  {setting === "wifi" && (
+                    <Wifi
+                      className={`w-5 h-5 mb-1 ${enabledSettings.includes(setting) ? "text-purple-500" : "text-white/60"}`}
+                    />
+                  )}
+                  {setting === "bluetooth" && (
+                   <Bluetooth
+                   className={`w-5 h-5 mb-1 ${enabledSettings.includes(setting) ? "text-purple-500" : "text-white/60"}`}
+                 />
+                  )}
+                  {setting === "airplane" && (
+                    <Plane
+                      className={`w-5 h-5 mb-1 ${enabledSettings.includes(setting) ? "text-purple-500" : "text-white/60"}`}
+                    />
+                  )}
+                  {setting === "energy" && (
+                    <Moon
+                      className={`w-5 h-5 mb-1 ${enabledSettings.includes(setting) ? "text-purple-500" : "text-white/60"}`}
+                    />
+                  )}
+                  {setting === "night" && (
+                    <Sun
+                      className={`w-5 h-5 mb-1 ${enabledSettings.includes(setting) ? "text-purple-500" : "text-white/60"}`}
+                    />
+                  )}
+                  {setting === "accessibility" && (
+                    <Settings
+                      className={`w-5 h-5 mb-1 ${enabledSettings.includes(setting) ? "text-purple-500" : "text-white/60"}`}
+                    />
+                  )}
+                  <span className="text-xs capitalize">{setting}</span>
+                </button>
+              ))}
+            </div>
+            <div className="space-y-4">
+              <div className="flex items-center gap-3">
+                <Sun className="w-4 h-4 text-white/60" />
+                <Slider
+                  defaultValue={[brightness]}
+                  max={100}
+                  step={1}
+                  onValueChange={(value) => setBrightness(value[0])}
+                  className="w-full"
+                />
+                <span className="text-xs w-8 text-right">{brightness}%</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <Volume2 className="w-4 h-4 text-white/60" />
+                <Slider
+                  defaultValue={[volume]}
+                  max={100}
+                  step={1}
+                  onValueChange={(value) => setVolume(value[0])}
+                  className="w-full"
+                />
+                <span className="text-xs w-8 text-right">{volume}%</span>
+              </div>
+            </div>
+          </div>
+          <div className="px-4 py-3 border-t border-white/10 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Battery className="w-4 h-4 text-white/60" />
+              <span className="text-sm">{batteryPercentage}%</span>
+            </div>
+            <button className="p-1.5 hover:bg-white/10 rounded-lg transition-colors">
+              <Settings className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
