@@ -4,8 +4,8 @@ import type { ReactNode } from "react"
 import "./globals.css"
 
 export const metadata: Metadata = {
-  title: "Portpoilo",
-  description: "Showcase of Henry Heffernan's work and experience",
+  title: "Portfolio",
+  description: "Showcase of Aaryan singh work and experience",
 }
 
 export default function RootLayout({

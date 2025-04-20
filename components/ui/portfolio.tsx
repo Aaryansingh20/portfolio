@@ -3,9 +3,11 @@
 import { useEffect, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { ExternalLink, Github, Mail, Twitter } from "lucide-react"
+import { ExternalLink, Github, Linkedin, Mail, Twitter } from "lucide-react"
 import { ThemeToggle } from "@/components/ui/theme-toggle"
-
+import textai from "@/public/text-ai.png"
+import iphone from "@/public/iphone.png"
+import Buyme from "@/public/Buyme.png"
 type Tab = "HOME" | "ABOUT" | "EXPERIENCE" | "PROJECTS" | "CONTACT"
 
 export default function Portfolio() {
@@ -68,10 +70,10 @@ export default function Portfolio() {
               </Link>{" "}
               or shoot me an email at{" "}
               <Link
-                href="mailto:henry.heffernan@gmail.com"
+                href="mailto:singhaaryan348@gmail.com"
                 className="text-blue-600 dark:text-blue-400 hover:underline"
               >
-                henry.heffernan@gmail.com
+                singhaaryan348@gmail.com
               </Link>
             </p>
 
@@ -93,11 +95,10 @@ export default function Portfolio() {
             <div className="space-y-6">
               <h2 className="text-3xl font-serif">About Me</h2>
               <p className="font-mono leading-relaxed">
-                From a young age, I have had a curiosity about how things worked. This naturally led me to become
-                absolutely obsessed with Lego and I fell in love with building things. In elementary school, I joined
-                the Lego Robotics team at my local middle school, which was my first real exposure to programming. In
-                2008, my family and I moved across the country from California to New York, where I attended middle
-                school, high school, and college.
+              A web developer proficient in MERN Stack and Next js. Proven track record of delivering 
+high quality, user-centric websites through collaborative teamwork and meticulous 
+attention to detail. Continuously enhancing skills to remain at the forefront of industry 
+standards.
               </p>
               <div className="aspect-video relative">
                 <Image
@@ -122,11 +123,9 @@ export default function Portfolio() {
                 <div>
                   <h4 className="font-bold mb-2">Languages</h4>
                   <ul className="list-disc list-inside space-y-1">
-                    <li>JavaScript/TypeScript</li>
+                    <li>TypeScript</li>
                     <li>Python</li>
-                    <li>C++</li>
-                    <li>Java</li>
-                    <li>SQL</li>
+                    <li>JavaScript</li>
                   </ul>
                 </div>
                 <div>
@@ -135,8 +134,6 @@ export default function Portfolio() {
                     <li>React/Next.js</li>
                     <li>Node.js</li>
                     <li>Git</li>
-                    <li>Docker</li>
-                    <li>AWS/Vercel</li>
                   </ul>
                 </div>
               </div>
@@ -146,9 +143,9 @@ export default function Portfolio() {
               <h3 className="text-xl font-serif">Education</h3>
               <div className="space-y-4">
                 <div>
-                  <h4 className="font-bold">Rensselaer Polytechnic Institute</h4>
-                  <p>BS in Computer Science</p>
-                  <p className="text-gray-600">2018 - 2022</p>
+                  <h4 className="font-bold text-lg">Universal college of engineering</h4>
+                  <p>Bachelor&apos;s in AI/ML</p>
+                  <p className="text-gray-600">2021 - 2025</p>
                 </div>
               </div>
             </div>
@@ -198,43 +195,51 @@ export default function Portfolio() {
               <div className="space-y-4">
                 <div className="flex justify-between items-start">
                   <div>
-                    <h3 className="text-xl font-bold">Software Engineer</h3>
-                    <p className="text-blue-600">Vercel</p>
+                    <h3 className="text-xl font-bold">Frontend Engineer</h3>
+                    <div className="flex gap-5">
+                    <p className="text-blue-600">Pillow Connect</p>
+                    <Link href="https://www.pillow-connect.com/" target="_blank" className="text-blue-600 hover:underline">
+                      <ExternalLink className="w-5 h-5" />
+                    </Link>
+                    </div>
                   </div>
-                  <p className="text-gray-600">2022 - Present</p>
+                  <p className="text-gray-600">2024 Aug -2024 Dec</p>
                 </div>
                 <ul className="list-disc list-inside space-y-2">
-                  <li>Led the development of key platform features using Next.js and TypeScript</li>
+                  <li>Led the development of frontend features using Next.js and TypeScript</li>
                   <li>Optimized build performance resulting in 40% faster deployment times</li>
                   <li>Collaborated with the design team to implement new UI components</li>
-                  <li>Mentored junior developers and conducted code reviews</li>
                 </ul>
-                <div className="aspect-video relative">
+                {/* <div className="aspect-video relative">
                   <Image
                     src="/placeholder.svg?height=300&width=600"
                     alt="Vercel office"
                     fill
                     className="object-cover rounded-sm"
                   />
-                </div>
+                </div> */}
               </div>
 
               <div className="space-y-4">
                 <div className="flex justify-between items-start">
                   <div>
-                    <h3 className="text-xl font-bold">Software Development Intern</h3>
-                    <p className="text-blue-600">Tech Startup</p>
+                    <h3 className="text-xl font-bold">German laguage course page</h3>
+                    <div className="flex gap-5">
+                    <p className="text-blue-600">Freelance Project</p>
+                    <Link href="https://code-german.vercel.app/" target="_blank" className="text-blue-600 hover:underline">
+                      <ExternalLink className="w-5 h-5" />
+                    </Link>
+                    </div>
                   </div>
-                  <p className="text-gray-600">Summer 2021</p>
+                  <p className="text-gray-600">Dec 2024</p>
                 </div>
                 <ul className="list-disc list-inside space-y-2">
                   <li>Developed and maintained React components for the main product</li>
-                  <li>Implemented responsive designs and improved mobile UX</li>
-                  <li>Integrated third-party APIs and services</li>
+                  <li>Implemented responsive designs</li>
                 </ul>
               </div>
 
-              <div className="space-y-4">
+              {/* <div className="space-y-4">
                 <div className="flex justify-between items-start">
                   <div>
                     <h3 className="text-xl font-bold">Research Assistant</h3>
@@ -247,7 +252,7 @@ export default function Portfolio() {
                   <li>Published a paper on efficient data processing methods</li>
                   <li>Presented findings at student research symposium</li>
                 </ul>
-              </div>
+              </div> */}
             </div>
           </div>
         )
@@ -260,77 +265,78 @@ export default function Portfolio() {
             <div className="space-y-12">
               <div className="space-y-4">
                 <div className="flex justify-between items-start">
-                  <h3 className="text-xl font-bold">AI-Powered Code Assistant</h3>
+                  <h3 className="text-xl font-bold">Text-AI</h3>
                   <div className="flex gap-2">
-                    <Link href="#" className="text-blue-600 hover:underline">
+                    <Link href="https://github.com/Aaryansingh20/Text-Ai" className="text-blue-600 hover:underline">
                       <Github className="w-5 h-5" />
                     </Link>
-                    <Link href="#" className="text-blue-600 hover:underline">
+                    <Link href="https://text-ai-seven.vercel.app/" target="_blank" className="text-blue-600 hover:underline">
                       <ExternalLink className="w-5 h-5" />
                     </Link>
                   </div>
                 </div>
                 <p>
-                  A VS Code extension that provides AI-powered code completions and suggestions. Built with TypeScript
-                  and OpenAI&apos;s GPT-3 API.
+                Designed and developed a dynamic single-screen AI website leveraging 
+                the Gemini API to provide seamless interaction.  
                 </p>
                 <div className="aspect-video relative">
                   <Image
-                    src="/placeholder.svg?height=300&width=600"
+                    src={textai}
                     alt="AI Code Assistant"
                     fill
-                    className="object-cover rounded-sm"
+                    className="object-contain rounded-sm"
                   />
                 </div>
               </div>
 
               <div className="space-y-4">
                 <div className="flex justify-between items-start">
-                  <h3 className="text-xl font-bold">Real-time Collaboration Tool</h3>
+                  <h3 className="text-xl font-bold">Buymes</h3>
                   <div className="flex gap-2">
-                    <Link href="#" className="text-blue-600 hover:underline">
+                    <Link href="https://github.com/Aaryansingh20/BuyME" className="text-blue-600 hover:underline">
                       <Github className="w-5 h-5" />
                     </Link>
-                    <Link href="#" className="text-blue-600 hover:underline">
+                    <Link href="https://buyme-omega.vercel.app/" target="_blank" className="text-blue-600 hover:underline">
                       <ExternalLink className="w-5 h-5" />
                     </Link>
                   </div>
                 </div>
                 <p>
-                  A web application for real-time document collaboration. Built with Next.js, WebSocket, and MongoDB.
+                Created an frontend ui of e-commerce website ,there 3d models of 
+                clothes with responsive design. 
                 </p>
                 <div className="aspect-video relative">
                   <Image
-                    src="/placeholder.svg?height=300&width=600"
+                    src={Buyme}
                     alt="Collaboration Tool"
                     fill
-                    className="object-cover rounded-sm"
+                    className="object-contain rounded-sm"
                   />
                 </div>
               </div>
 
               <div className="space-y-4">
                 <div className="flex justify-between items-start">
-                  <h3 className="text-xl font-bold">Custom Mechanical Keyboard Firmware</h3>
+                  <h3 className="text-xl font-bold">Iphone website</h3>
                   <div className="flex gap-2">
-                    <Link href="#" className="text-blue-600 hover:underline">
+                    <Link href="https://github.com/Aaryansingh20/IPhone-website" target="_blank" className="text-blue-600 hover:underline">
                       <Github className="w-5 h-5" />
                     </Link>
-                    <Link href="#" className="text-blue-600 hover:underline">
+                    <Link href="https://i-phone-website-olive.vercel.app/" target="_blank" className="text-blue-600 hover:underline">
                       <ExternalLink className="w-5 h-5" />
                     </Link>
                   </div>
                 </div>
                 <p>
-                  Custom firmware for mechanical keyboards written in C++. Includes features like layers, macros, and
-                  RGB control.
+                Designed a visually engaging iphone website clone using react, 
+                integrating GSAP for smooth and advanced animations. 
                 </p>
                 <div className="aspect-video relative">
                   <Image
-                    src="/placeholder.svg?height=300&width=600"
+                    src={iphone}
                     alt="Keyboard Firmware"
                     fill
-                    className="object-cover rounded-sm"
+                    className="object-contain rounded-sm"
                   />
                 </div>
               </div>
@@ -353,19 +359,19 @@ export default function Portfolio() {
                 <h3 className="text-xl font-serif">Get in touch</h3>
                 <div className="space-y-2">
                   <Link
-                    href="mailto:henry.heffernan@gmail.com"
+                    href="mailto:singhaaryan348@gmail.com"
                     className="flex items-center gap-2 text-blue-600 hover:underline"
                   >
                     <Mail className="w-5 h-5" />
-                    henry.heffernan@gmail.com
+                    singhaaryan348@gmail.com
                   </Link>
-                  <Link href="#" className="flex items-center gap-2 text-blue-600 hover:underline">
-                    <Twitter className="w-5 h-5" />
-                    @henryheffernan
+                  <Link href="https://www.linkedin.com/in/aaryan-singh-b2ab4628a/" target="_blank" className="flex items-center gap-2 text-blue-600 hover:underline">
+                    <Linkedin className="w-5 h-5" />
+                    @Arayan singh
                   </Link>
-                  <Link href="#" className="flex items-center gap-2 text-blue-600 hover:underline">
+                  <Link href="https://github.com/Aaryansingh20" target="_blank" className="flex items-center gap-2 text-blue-600 hover:underline">
                     <Github className="w-5 h-5" />
-                    github.com/henryheffernan
+                    github.com/Aaryansingh20
                   </Link>
                 </div>
               </div>
@@ -411,9 +417,8 @@ export default function Portfolio() {
         {/* Left Navigation */}
         <nav className="md:w-48 flex flex-col">
           <div className="mb-8">
-            <h1 className="font-serif text-4xl">Henry</h1>
-            <h1 className="font-serif text-4xl mb-2">Heffernan</h1>
-            <h2 className="font-serif text-xl text-gray-700 dark:text-gray-300">Showcase &apos;22</h2>
+            <h1 className="font-serif text-4xl">Aaryan</h1>
+            <h1 className="font-serif text-4xl mb-2">Singh</h1>
           </div>
           <ul className="space-y-4 flex-grow">
             {(["HOME", "ABOUT", "EXPERIENCE", "PROJECTS", "CONTACT"] as Tab[]).map((item) => (
