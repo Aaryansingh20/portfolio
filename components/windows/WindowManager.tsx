@@ -10,6 +10,8 @@ import Calculator from "@/components/ui/Calculator"
 import Weather from "@/components/ui/weather"
 import SpaceGame from "@/components/ui/memory-game"
 import {  Square3Stack3DIcon} from '@heroicons/react/24/outline';
+import PaintApp from "../ui/paint-app"
+import BrowserApp from "../ui/Browser"
 
 
 interface WindowManagerProps {
@@ -78,8 +80,8 @@ export default function WindowManager({ computerWindowRef }: WindowManagerProps)
               <SpaceGame />
             ) : app.name === "Calculator" ? (
               <Calculator />
-            ) : app.name === "Weather" ? (
-              <Weather />
+            ) : app.name === "Paint" ? (
+              <PaintApp/>
             ) : (
               <p className="text-sm">Content for {app.name}</p>
             )}

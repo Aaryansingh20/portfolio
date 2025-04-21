@@ -14,7 +14,7 @@ export default function ModernWindows() {
 
   return (
     <WindowsProvider>
-      <div className="h-screen bg-gray-900 flex items-center justify-center p-4">
+      <div className="h-full bg-gray-900 flex items-center justify-center">
         {/* Screen content */}
         <div
           ref={computerWindowRef}

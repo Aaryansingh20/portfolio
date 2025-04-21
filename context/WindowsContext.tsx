@@ -106,7 +106,7 @@ export const WindowsProvider: React.FC<{ children: React.ReactNode }> = ({ child
       icon: "📄",
       isOpen: false,
       isMinimized: false,
-      isMaximized: false,
+      isMaximized: true,
       position: { x: 20, y: 260 },
     },
     {
@@ -114,15 +114,14 @@ export const WindowsProvider: React.FC<{ children: React.ReactNode }> = ({ child
       icon: "📝",
       isOpen: false,
       isMinimized: false,
-      isMaximized: false,
+      isMaximized: true,
       position: { x: 120, y: 20 },
-    },
-    {
+    },{
       name: "Memorytest",
       icon: "🧠",
       isOpen: false,
       isMinimized: false,
-      isMaximized: false,
+      isMaximized: true,
       position: { x: 120, y: 20 },
     },
     {
@@ -130,15 +129,15 @@ export const WindowsProvider: React.FC<{ children: React.ReactNode }> = ({ child
       icon: "🧮",
       isOpen: false,
       isMinimized: false,
-      isMaximized: false,
+      isMaximized: true,
       position: { x: 120, y: 100 },
     },
     {
-      name: "Weather",
-      icon: "🌤️",
+      name: "Paint",
+      icon: "🎨",
       isOpen: false,
       isMinimized: false,
-      isMaximized: false,
+      isMaximized: true,
       position: { x: 120, y: 180 },
     },
   ])
