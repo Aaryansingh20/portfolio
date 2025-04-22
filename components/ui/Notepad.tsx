@@ -49,7 +49,7 @@ export default function Notepad() {
   }
 
   return (
-    <div className="flex flex-col h-screen bg-[#1E1E1E] text-white">
+    <div className="flex flex-col h-full bg-[#1E1E1E] text-white">
       {/* Top Menu Bar */}
       <div className="flex items-center bg-[#2D2D2D] px-2 py-1 text-sm">
         <DropdownMenu>

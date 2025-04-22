@@ -400,7 +400,7 @@ export default function PaintApp() {
   ]
 
   return (
-    <div className="flex flex-col border-2 border-gray-300 rounded-sm overflow-hidden bg-gray-100">
+    <div className="flex flex-col border-2 h-full border-gray-300 rounded-sm overflow-hidden text-black bg-gray-100">
       {/* Simplified Toolbar */}
       <div className="flex flex-wrap gap-2 p-2 bg-gray-200 border-b border-gray-300 items-center">
         <Button

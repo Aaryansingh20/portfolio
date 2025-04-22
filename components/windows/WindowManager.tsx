@@ -12,6 +12,7 @@ import SpaceGame from "@/components/ui/memory-game"
 import {  Square3Stack3DIcon} from '@heroicons/react/24/outline';
 import PaintApp from "../ui/paint-app"
 import BrowserApp from "../ui/Browser"
+import Browser from "../ui/Browser"
 
 
 interface WindowManagerProps {
@@ -74,14 +75,12 @@ export default function WindowManager({ computerWindowRef }: WindowManagerProps)
           <div className="flex-1 w-full h-full overflow-auto scrollbar-hide">
             {app.name === "Portfolio" ? (
               <Portfolio />
+            ) : app.name === "Browser" ? (
+              <Browser />
             ) : app.name === "Notepad" ? (
               <Notepad />
-            ) : app.name === "Memorytest" ? (
-              <SpaceGame />
-            ) : app.name === "Calculator" ? (
-              <Calculator />
             ) : app.name === "Paint" ? (
-              <PaintApp/>
+              <PaintApp />
             ) : (
               <p className="text-sm">Content for {app.name}</p>
             )}

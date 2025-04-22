@@ -124,7 +124,7 @@ export default function Calculator() {
   )
 
   return (
-    <div className="w-80 bg-[#202020] text-white shadow-xl">
+    <div className="w-fit h-full bg-[#202020] text-white shadow-xl">
       {/* Header */}
       <div className="flex items-center justify-between p-2 text-sm">
         <span className="font-semibold">Standard</span>
