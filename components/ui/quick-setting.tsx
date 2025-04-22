@@ -98,14 +98,14 @@ export default function QuickSettings() {
               <div className="absolute bottom-full right-0 mb-2 w-64 bg-gray-900/95 backdrop-blur-xl rounded-xl shadow-2xl border border-white/10 overflow-hidden">
                 <div className="p-4">
                   <button
-                    className={`flex items-center justify-between w-full p-3 rounded-lg transition-colors ${wifiOn ? "bg-purple-500/20 hover:bg-purple-500/30" : "bg-gray-800 hover:bg-gray-700"}`}
+                    className={`flex items-center justify-between w-full p-3 rounded-lg transition-colors ${wifiOn ? "bg-blue-500/20 hover:bg-blue-500/30" : "bg-gray-800 hover:bg-gray-700"}`}
                     onClick={() => setWifiOn(!wifiOn)}
                   >
                     <div className="flex items-center">
                       <Wifi className="w-5 h-5 mr-3" />
                       <span className="text-sm text-white">TP-Link</span>
                     </div>
-                    <div className={`w-8 h-4 rounded-full ${wifiOn ? "bg-purple-500" : "bg-gray-600"} relative`}>
+                    <div className={`w-8 h-4 rounded-full ${wifiOn ? "bg-blue-500" : "bg-gray-600"} relative`}>
                       <div
                         className={`w-3 h-3 rounded-full bg-white absolute top-0.5 transition-all ${wifiOn ? "right-0.5" : "left-0.5"}`}
                       />

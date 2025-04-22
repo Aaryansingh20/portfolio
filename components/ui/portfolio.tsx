@@ -58,7 +58,7 @@ export default function Portfolio() {
             </div>
 
             <p className="font-mono leading-relaxed">
-              I&apos;m a software engineer currently working at Vercel. In May of 2022 I graduated from Rensselaer
+              I&apos;m a AI engineer currently working at Vercel. In May of 2022 I graduated from Rensselaer
               Polytechnic Institute with my BS in Computer Science.
             </p>
 
