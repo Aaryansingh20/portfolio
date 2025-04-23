@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { ExternalLink, Github, Linkedin, Mail, Twitter } from "lucide-react"
+import { ExternalLink, Github, Linkedin, Mail } from "lucide-react"
 import { ThemeToggle } from "@/components/ui/theme-toggle"
 import textai from "@/public/text-ai.png"
 import iphone from "@/public/iphone.png"
@@ -46,7 +46,6 @@ export default function Portfolio() {
     }
   }
 
-
   const renderContent = () => {
     switch (activeTab) {
       case "HOME":
@@ -58,8 +57,7 @@ export default function Portfolio() {
             </div>
 
             <p className="font-mono leading-relaxed">
-              I&apos;m a AI engineer currently working at Vercel. In May of 2022 I graduated from Rensselaer
-              Polytechnic Institute with my BS in Computer Science.
+              I&apos;m a AI engineer currently in my last sem of enginering.
             </p>
 
             <p className="font-mono leading-relaxed">
@@ -69,10 +67,7 @@ export default function Portfolio() {
                 this form
               </Link>{" "}
               or shoot me an email at{" "}
-              <Link
-                href="mailto:singhaaryan348@gmail.com"
-                className="text-blue-600 dark:text-blue-400 hover:underline"
-              >
+              <Link href="mailto:singhaaryan348@gmail.com" className="text-blue-600 dark:text-blue-400 hover:underline">
                 singhaaryan348@gmail.com
               </Link>
             </p>
@@ -95,10 +90,9 @@ export default function Portfolio() {
             <div className="space-y-6">
               <h2 className="text-3xl font-serif">About Me</h2>
               <p className="font-mono leading-relaxed">
-              A web developer proficient in MERN Stack and Next js. Proven track record of delivering 
-high quality, user-centric websites through collaborative teamwork and meticulous 
-attention to detail. Continuously enhancing skills to remain at the forefront of industry 
-standards.
+                A web developer proficient in MERN Stack and Next js. Proven track record of delivering high quality,
+                user-centric websites through collaborative teamwork and meticulous attention to detail. Continuously
+                enhancing skills to remain at the forefront of industry standards.
               </p>
               <div className="aspect-video relative">
                 <Image
@@ -197,10 +191,14 @@ standards.
                   <div>
                     <h3 className="text-xl font-bold">Frontend Engineer</h3>
                     <div className="flex gap-5">
-                    <p className="text-blue-600">Pillow Connect</p>
-                    <Link href="https://www.pillow-connect.com/" target="_blank" className="text-blue-600 hover:underline">
-                      <ExternalLink className="w-5 h-5" />
-                    </Link>
+                      <p className="text-blue-600">Pillow Connect</p>
+                      <Link
+                        href="https://www.pillow-connect.com/"
+                        target="_blank"
+                        className="text-blue-600 hover:underline"
+                      >
+                        <ExternalLink className="w-5 h-5" />
+                      </Link>
                     </div>
                   </div>
                   <p className="text-gray-600">2024 Aug -2024 Dec</p>
@@ -225,10 +223,14 @@ standards.
                   <div>
                     <h3 className="text-xl font-bold">German laguage course page</h3>
                     <div className="flex gap-5">
-                    <p className="text-blue-600">Freelance Project</p>
-                    <Link href="https://code-german.vercel.app/" target="_blank" className="text-blue-600 hover:underline">
-                      <ExternalLink className="w-5 h-5" />
-                    </Link>
+                      <p className="text-blue-600">Freelance Project</p>
+                      <Link
+                        href="https://code-german.vercel.app/"
+                        target="_blank"
+                        className="text-blue-600 hover:underline"
+                      >
+                        <ExternalLink className="w-5 h-5" />
+                      </Link>
                     </div>
                   </div>
                   <p className="text-gray-600">Dec 2024</p>
@@ -270,18 +272,22 @@ standards.
                     <Link href="https://github.com/Aaryansingh20/Text-Ai" className="text-blue-600 hover:underline">
                       <Github className="w-5 h-5" />
                     </Link>
-                    <Link href="https://text-ai-seven.vercel.app/" target="_blank" className="text-blue-600 hover:underline">
+                    <Link
+                      href="https://text-ai-seven.vercel.app/"
+                      target="_blank"
+                      className="text-blue-600 hover:underline"
+                    >
                       <ExternalLink className="w-5 h-5" />
                     </Link>
                   </div>
                 </div>
                 <p>
-                Designed and developed a dynamic single-screen AI website leveraging 
-                the Gemini API to provide seamless interaction.  
+                  Designed and developed a dynamic single-screen AI website leveraging the Gemini API to provide
+                  seamless interaction.
                 </p>
                 <div className="aspect-video relative">
                   <Image
-                    src={textai}
+                    src={textai || "/placeholder.svg"}
                     alt="AI Code Assistant"
                     fill
                     className="object-contain rounded-sm"
@@ -296,18 +302,19 @@ standards.
                     <Link href="https://github.com/Aaryansingh20/BuyME" className="text-blue-600 hover:underline">
                       <Github className="w-5 h-5" />
                     </Link>
-                    <Link href="https://buyme-omega.vercel.app/" target="_blank" className="text-blue-600 hover:underline">
+                    <Link
+                      href="https://buyme-omega.vercel.app/"
+                      target="_blank"
+                      className="text-blue-600 hover:underline"
+                    >
                       <ExternalLink className="w-5 h-5" />
                     </Link>
                   </div>
                 </div>
-                <p>
-                Created an frontend ui of e-commerce website ,there 3d models of 
-                clothes with responsive design. 
-                </p>
+                <p>Created an frontend ui of e-commerce website ,there 3d models of clothes with responsive design.</p>
                 <div className="aspect-video relative">
                   <Image
-                    src={Buyme}
+                    src={Buyme || "/placeholder.svg"}
                     alt="Collaboration Tool"
                     fill
                     className="object-contain rounded-sm"
@@ -319,21 +326,29 @@ standards.
                 <div className="flex justify-between items-start">
                   <h3 className="text-xl font-bold">Iphone website</h3>
                   <div className="flex gap-2">
-                    <Link href="https://github.com/Aaryansingh20/IPhone-website" target="_blank" className="text-blue-600 hover:underline">
+                    <Link
+                      href="https://github.com/Aaryansingh20/IPhone-website"
+                      target="_blank"
+                      className="text-blue-600 hover:underline"
+                    >
                       <Github className="w-5 h-5" />
                     </Link>
-                    <Link href="https://i-phone-website-olive.vercel.app/" target="_blank" className="text-blue-600 hover:underline">
+                    <Link
+                      href="https://i-phone-website-olive.vercel.app/"
+                      target="_blank"
+                      className="text-blue-600 hover:underline"
+                    >
                       <ExternalLink className="w-5 h-5" />
                     </Link>
                   </div>
                 </div>
                 <p>
-                Designed a visually engaging iphone website clone using react, 
-                integrating GSAP for smooth and advanced animations. 
+                  Designed a visually engaging iphone website clone using react, integrating GSAP for smooth and
+                  advanced animations.
                 </p>
                 <div className="aspect-video relative">
                   <Image
-                    src={iphone}
+                    src={iphone || "/placeholder.svg"}
                     alt="Keyboard Firmware"
                     fill
                     className="object-contain rounded-sm"
@@ -365,11 +380,19 @@ standards.
                     <Mail className="w-5 h-5" />
                     singhaaryan348@gmail.com
                   </Link>
-                  <Link href="https://www.linkedin.com/in/aaryan-singh-b2ab4628a/" target="_blank" className="flex items-center gap-2 text-blue-600 hover:underline">
+                  <Link
+                    href="https://www.linkedin.com/in/aaryan-singh-b2ab4628a/"
+                    target="_blank"
+                    className="flex items-center gap-2 text-blue-600 hover:underline"
+                  >
                     <Linkedin className="w-5 h-5" />
                     @Arayan singh
                   </Link>
-                  <Link href="https://github.com/Aaryansingh20" target="_blank" className="flex items-center gap-2 text-blue-600 hover:underline">
+                  <Link
+                    href="https://github.com/Aaryansingh20"
+                    target="_blank"
+                    className="flex items-center gap-2 text-blue-600 hover:underline"
+                  >
                     <Github className="w-5 h-5" />
                     github.com/Aaryansingh20
                   </Link>
@@ -423,19 +446,18 @@ standards.
           <ul className="space-y-4 flex-grow">
             {(["HOME", "ABOUT", "EXPERIENCE", "PROJECTS", "CONTACT"] as Tab[]).map((item) => (
               <li key={item}>
-               <button
-  onClick={() => {
-    setActiveTab(item);
-    handleClick();
-  }}
-  className={`font-mono text-blue-600 dark:text-blue-400 hover:underline ${
-    activeTab === item ? "underline font-bold" : ""
-  }`}
->
-  {activeTab === item ? "• " : ""}
-  {item}
-</button>
-
+                <button
+                  onClick={() => {
+                    setActiveTab(item)
+                    handleClick()
+                  }}
+                  className={`font-mono text-blue-600 dark:text-blue-400 hover:underline ${
+                    activeTab === item ? "underline font-bold" : ""
+                  }`}
+                >
+                  {activeTab === item ? "• " : ""}
+                  {item}
+                </button>
               </li>
             ))}
           </ul>
@@ -448,4 +470,3 @@ standards.
     </div>
   )
 }
-

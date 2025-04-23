@@ -102,7 +102,7 @@ export const WindowsProvider: React.FC<{ children: React.ReactNode }> = ({ child
   // Desktop apps
   const [desktopApps, setDesktopApps] = useState<DesktopApp[]>([
     {
-      name: "Portfolio",
+      name: "Resume",
       icon: "📄",
       isOpen: false,
       isMinimized: false,

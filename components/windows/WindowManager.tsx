@@ -73,7 +73,7 @@ export default function WindowManager({ computerWindowRef }: WindowManagerProps)
             </div>
           </div>
           <div className="flex-1 w-full h-full overflow-auto scrollbar-hide">
-            {app.name === "Portfolio" ? (
+            {app.name === "Resume" ? (
               <Portfolio />
             ) : app.name === "Browser" ? (
               <Browser />
