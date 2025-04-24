@@ -57,7 +57,9 @@ export default function Portfolio() {
             </div>
 
             <p className="font-mono leading-relaxed">
-              I&apos;m a AI engineer currently in my last sem of enginering.
+              A web developer proficient in MERN Stack and Next js. Proven track record of delivering high quality,
+              user-centric websites through collaborative teamwork and meticulous attention to detail. Continuously
+              enhancing skills to remain at the forefront of industry standards.
             </p>
 
             <p className="font-mono leading-relaxed">
@@ -80,14 +82,14 @@ export default function Portfolio() {
                 </div>
                 <div className="font-mono">
                   <h3 className="text-xl mb-2">Looking for my resume?</h3>
-                  <Link href="#" className="text-blue-600 dark:text-blue-400 hover:underline">
+                  <Link href="/Resume.pdf" target="_blank" download className="text-blue-600 dark:text-blue-400 hover:underline">
                     Click here to download it!
                   </Link>
                 </div>
               </div>
             </div>
 
-            <div className="space-y-6">
+            {/* <div className="space-y-6">
               <h2 className="text-3xl font-serif">About Me</h2>
               <p className="font-mono leading-relaxed">
                 A web developer proficient in MERN Stack and Next js. Proven track record of delivering high quality,
@@ -102,7 +104,7 @@ export default function Portfolio() {
                   className="object-cover rounded-sm"
                 />
               </div>
-            </div>
+            </div> */}
           </div>
         )
 
@@ -148,31 +150,32 @@ export default function Portfolio() {
               <h3 className="text-xl font-serif">Interests</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-4">
-                  <div className="aspect-square relative">
+                  {/* <div className="aspect-square relative">
                     <Image
                       src="/placeholder.svg?height=300&width=300"
                       alt="Mechanical keyboard"
                       fill
                       className="object-cover rounded-sm"
                     />
-                  </div>
+                  </div> */}
                   <p>
-                    I&apos;m passionate about mechanical keyboards and have built several custom ones. This hobby
-                    combines my love for engineering, design, and typing.
+                    As a Full Stack Developer, I&apos;m deeply intrigued by the potential of AI and robotics, constantly
+                    seeking ways to integrate these cutting-edge technologies into innovative web applications.{" "}
                   </p>
                 </div>
                 <div className="space-y-4">
-                  <div className="aspect-square relative">
+                  {/* <div className="aspect-square relative">
                     <Image
                       src="/placeholder.svg?height=300&width=300"
                       alt="Rock climbing"
                       fill
                       className="object-cover rounded-sm"
                     />
-                  </div>
+                  </div> */}
                   <p>
-                    Rock climbing has been my go-to activity for both physical and mental challenges. It&apos;s like
-                    solving puzzles while working out.
+                    Balancing my technical skills as a Full Stack Developer, I am dedicated to maintaining physical and
+                    mental discipline through rigorous training in the gym and MMA, fostering a well-rounded approach to
+                    tackling challenges{" "}
                   </p>
                 </div>
               </div>
