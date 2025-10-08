@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef } from "react"
+import { useRef, useEffect, useState } from "react"
 import { useOutsideClick } from "@/hooks/useOutsideClick"
 import { useWindows } from "@/context/WindowsContext"
 import { Wifi, Bluetooth, Plane, Moon, Sun, Settings, Volume2, Battery } from "lucide-react"
@@ -20,22 +20,40 @@ export default function QuickSettings() {
     quickSettingsTriggerRef,
   } = useWindows()
 
+  const [position, setPosition] = useState({ right: 0, bottom: 0 })
   const quickSettingsRef = useRef<HTMLDivElement>(null)
 
-  useOutsideClick(quickSettingsRef, () => setIsQuickSettingsOpen(false), quickSettingsTriggerRef)
+  useOutsideClick(quickSettingsRef, () => setIsQuickSettingsOpen(false), quickSettingsTriggerRef ?? undefined)
+
+  useEffect(() => {
+    if (quickSettingsTriggerRef?.current && quickSettingsRef.current) {
+      const triggerRect = quickSettingsTriggerRef.current.getBoundingClientRect()
+      const panelRect = quickSettingsRef.current.getBoundingClientRect()
+      const screenWidth = window.innerWidth
+      const screenHeight = window.innerHeight
+
+      // Position panel above the taskbar (which is 48px high)
+      const bottom = 48 + 12 // 48px for taskbar, 12px for margin
+
+      // Align the right edge of the panel with the right edge of the trigger button
+      const right = screenWidth - triggerRect.right
+
+      setPosition({ right, bottom })
+    }
+  }, [isQuickSettingsOpen, quickSettingsTriggerRef])
 
   if (!isQuickSettingsOpen) return null
 
   return (
     <div
       ref={quickSettingsRef}
-      className="fixed bg-gray-900/95 backdrop-blur-xl rounded-xl shadow-2xl border border-white/10 overflow-hidden z-50"
+      className="fixed w-80 bg-gray-900/95 backdrop-blur-xl rounded-xl shadow-2xl border border-white/10 overflow-hidden z-50"
       style={{
-        right: "223px", // Adjust this value as needed to fine-tune the horizontal position
-        bottom: "60px", // Adjust this value to set the distance from the bottom of the screen
+        right: `${position.right}px`,
+        bottom: `${position.bottom}px`,
       }}
     >
-      <div className="p-4 w-80">
+      <div className="p-4">
         <div className="grid grid-cols-3 gap-2 mb-4">
           {[
             { id: "wifi", icon: Wifi },
