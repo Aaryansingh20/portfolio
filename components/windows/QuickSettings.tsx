@@ -1,6 +1,7 @@
 "use client"
 
 import { useRef } from "react"
+import { useOutsideClick } from "@/hooks/useOutsideClick"
 import { useWindows } from "@/context/WindowsContext"
 import { Wifi, Bluetooth, Plane, Moon, Sun, Settings, Volume2, Battery } from "lucide-react"
 import { Slider } from "@/components/ui/slider"
@@ -8,6 +9,7 @@ import { Slider } from "@/components/ui/slider"
 export default function QuickSettings() {
   const {
     isQuickSettingsOpen,
+    setIsQuickSettingsOpen,
     brightness,
     setBrightness,
     volume,
@@ -15,9 +17,12 @@ export default function QuickSettings() {
     batteryPercentage,
     enabledSettings,
     setEnabledSettings,
+    quickSettingsTriggerRef,
   } = useWindows()
 
   const quickSettingsRef = useRef<HTMLDivElement>(null)
+
+  useOutsideClick(quickSettingsRef, () => setIsQuickSettingsOpen(false), quickSettingsTriggerRef)
 
   if (!isQuickSettingsOpen) return null
 

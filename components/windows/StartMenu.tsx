@@ -1,7 +1,8 @@
 "use client"
 
 import type React from "react"
-import { useRef } from "react"
+import { useRef, useEffect } from "react"
+import { useOutsideClick } from "@/hooks/useOutsideClick"
 import { useWindows } from "@/context/WindowsContext"
 import { Search, Power, Lock } from "lucide-react"
 
@@ -141,6 +142,8 @@ function PowerMenu({
   setIsRestarting,
   setIsShutDown,
 }: PowerMenuProps) {
+  useOutsideClick(powerMenuRef, () => setIsPowerMenuOpen(false))
+
   if (!isPowerMenuOpen) return null
 
   return (

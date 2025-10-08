@@ -73,6 +73,8 @@ interface WindowsContextType {
   setEnabledSettings: React.Dispatch<React.SetStateAction<string[]>>
   quickSettingsAnchor: { x: number; y: number } | null
   setQuickSettingsAnchor: React.Dispatch<React.SetStateAction<{ x: number; y: number } | null>>
+  quickSettingsTriggerRef: React.RefObject<HTMLElement> | null
+  setQuickSettingsTriggerRef: React.Dispatch<React.SetStateAction<React.RefObject<HTMLElement> | null>>
 
   // Lock screen
   lockTimer: number
@@ -163,6 +165,7 @@ export const WindowsProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [activeQuickSetting, setActiveQuickSetting] = useState<string>("wifi")
   const [enabledSettings, setEnabledSettings] = useState<string[]>(["wifi"])
   const [quickSettingsAnchor, setQuickSettingsAnchor] = useState<{ x: number; y: number } | null>(null)
+  const [quickSettingsTriggerRef, setQuickSettingsTriggerRef] = useState<React.RefObject<HTMLElement> | null>(null)
 
   // Lock screen
   const [lockTimer, setLockTimer] = useState(0)
@@ -283,19 +286,28 @@ export const WindowsProvider: React.FC<{ children: React.ReactNode }> = ({ child
   }
 
   const handleQuickSettingClick = (setting: string, event: React.MouseEvent) => {
-    setActiveQuickSetting(setting)
-    setIsQuickSettingsOpen(true)
-    setEnabledSettings((prev) => (prev.includes(setting) ? prev.filter((s) => s !== setting) : [...prev, setting]))
+    if (isQuickSettingsOpen) {
+      setIsQuickSettingsOpen(false)
+      setQuickSettingsAnchor(null)
+      setQuickSettingsTriggerRef(null)
+    } else {
+      setActiveQuickSetting(setting)
+      setIsQuickSettingsOpen(true)
+      setEnabledSettings((prev) => (prev.includes(setting) ? prev.filter((s) => s !== setting) : [...prev, setting]))
 
-    // Get the bounding rectangle of the taskbar
-    const taskbarRect = (event.currentTarget.closest(".absolute.bottom-0") as HTMLElement)?.getBoundingClientRect()
+      // Store a ref to the clicked element
+      setQuickSettingsTriggerRef({ current: event.currentTarget as HTMLElement })
 
-    if (taskbarRect) {
-      // Position the panel relative to the taskbar
-      setQuickSettingsAnchor({
-        x: taskbarRect.right - 300, // 300px is the approximate width of the quick settings panel
-        y: taskbarRect.top,
-      })
+      // Get the bounding rectangle of the taskbar
+      const taskbarRect = (event.currentTarget.closest(".absolute.bottom-0") as HTMLElement)?.getBoundingClientRect()
+
+      if (taskbarRect) {
+        // Position the panel relative to the taskbar
+        setQuickSettingsAnchor({
+          x: taskbarRect.right - 300, // 300px is the approximate width of the quick settings panel
+          y: taskbarRect.top,
+        })
+      }
     }
   }
 
@@ -391,6 +403,8 @@ export const WindowsProvider: React.FC<{ children: React.ReactNode }> = ({ child
     setEnabledSettings,
     quickSettingsAnchor,
     setQuickSettingsAnchor,
+    quickSettingsTriggerRef,
+    setQuickSettingsTriggerRef,
 
     // Lock screen
     lockTimer,
