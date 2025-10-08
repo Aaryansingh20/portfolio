@@ -8,6 +8,7 @@ import { ThemeToggle } from "@/components/ui/theme-toggle"
 import textai from "@/public/text-ai.png"
 import iphone from "@/public/iphone.png"
 import Buyme from "@/public/Buyme.png"
+import rag from "@/public/rag.png"
 type Tab = "HOME" | "ABOUT" | "EXPERIENCE" | "PROJECTS" | "CONTACT"
 
 export default function Portfolio() {
@@ -57,9 +58,7 @@ export default function Portfolio() {
             </div>
 
             <p className="font-mono leading-relaxed">
-              A web developer proficient in MERN Stack and Next js. Proven track record of delivering high quality,
-              user-centric websites through collaborative teamwork and meticulous attention to detail. Continuously
-              enhancing skills to remain at the forefront of industry standards.
+             I’m Aaryan Singh, a Full-Stack AI Engineer passionate about building intelligent and interactive web solutions. I love combining AI technologies like RAG and LLMs with modern frameworks such as Next.js and React to create innovative user experiences.
             </p>
 
             <p className="font-mono leading-relaxed">
@@ -268,6 +267,39 @@ export default function Portfolio() {
             <h2 className="text-3xl font-serif">Projects</h2>
 
             <div className="space-y-12">
+              <div className="space-y-4">
+                <div className="flex justify-between items-start">
+                  <h3 className="text-xl font-bold">IRIS</h3>
+                  <div className="flex gap-2">
+                    <Link href="https://github.com/Aaryansingh20/Rag-chat" className="text-blue-600 hover:underline">
+                      <Github className="w-5 h-5" />
+                    </Link>
+                    <Link
+                      href="https://rag-chat-prmxxwl6rpcxuy9ft7fua8.streamlit.app/"
+                      target="_blank"
+                      className="text-blue-600 hover:underline"
+                    >
+                      <ExternalLink className="w-5 h-5" />
+                    </Link>
+                  </div>
+                </div>
+                <p>
+                  
+Developed a powerful AI chatbot combining Gemini API and 
+Retrieval Augmented Generation (RAG) with dynamic chunking 
+using Q Learning for enhanced document search and response 
+accuracy.  
+                </p>
+                <div className="aspect-video relative">
+                  <Image
+                    src={rag || "/placeholder.svg"}
+                    alt="AI Code Assistant"
+                    fill
+                    className="object-contain rounded-sm"
+                  />
+                </div>
+              </div>
+
               <div className="space-y-4">
                 <div className="flex justify-between items-start">
                   <h3 className="text-xl font-bold">Text-AI</h3>

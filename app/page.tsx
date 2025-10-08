@@ -9,7 +9,7 @@ export default function Home() {
   const deviceType = useDeviceType()
 
   return (
-    <main className="min-h-screen bg-[linear-gradient(135deg,_#f5f7fa_0%,_#c3cfe2_100%)] overflow-auto scrollbar-hide">
+    <main className="min-h-screen bg-none overflow-auto scrollbar-hide">
       {deviceType === "mobile" && <MobileMockup />}
       {deviceType === "tablet" && <TabletMockup />}
       {deviceType === "laptop" && <LaptopMockup />}
