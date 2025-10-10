@@ -83,16 +83,11 @@ export default function Taskbar() {
 
       {/* Right section */}
       <div className="flex items-center gap-4 text-white/80">
-        <button onClick={(e) => handleQuickSettingClick("wifi", e)} className="p-1 hover:bg-white/10 rounded-md">
           <Wifi className={`w-4 h-4 ${enabledSettings.includes("wifi") ? "text-blue-500" : "text-white/60"}`} />
-        </button>
-        <button onClick={(e) => handleQuickSettingClick("volume", e)} className="p-1 hover:bg-white/10 rounded-md">
           <Volume2 className="w-4 h-4" />
-        </button>
         <div className="relative group">
-          <button onClick={(e) => handleQuickSettingClick("battery", e)} className="p-1 hover:bg-white/10 rounded-md">
             <BatteryLow className="w-4 h-4" />
-          </button>
+          
           <div className="absolute bottom-full right-0 mb-2 px-2 py-1 bg-gray-800 text-white text-xs rounded hidden group-hover:block">
             {batteryPercentage}%
           </div>

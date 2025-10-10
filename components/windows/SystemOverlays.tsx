@@ -32,11 +32,11 @@ export default function SystemOverlays() {
               onChange={(e) => setEnteredPassword(e.target.value)}
               onKeyPress={(e) => {
                 if (e.key === "Enter") {
-                  if (enteredPassword === "aryan") {
+                  if (enteredPassword === "theworst") {
                     setIsLocked(false)
                     setEnteredPassword("")
                   } else {
-                    alert("Incorrect password")
+                    alert("password : theworst")
                   }
                 }
               }}
